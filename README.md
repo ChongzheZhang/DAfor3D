@@ -116,7 +116,7 @@ MAP_TO_BEV:
   - for the 3D Sparse Convolution: (4, 0.0625, 384), (4, 0.1, 256), (4, 0.125, 128)
   - for the Voxel Transformer: (4, 0.0625, 512), (4, 0.1, 320), (4, 0.125, 256), (4, 0.2, 128)
 
-#### Voxel depth or depth
+#### Voxel depth or width
 
 For example in the Waymo dataset:
 
@@ -172,10 +172,10 @@ AUG_CONFIG_LIST:
 
 ### Downsampling
 
-- In Kitti, if randomly pick 32-beams and 16-beams point cloud into training, you need to set **RANDOM_DOWNSAMPLE** to True. 
+- In Kitti, if randomly pick 32-beams and 16-beams point cloud into training, you need to set **LINE_DOWNSAMPLE** to True. 
 **HIGH_RESOLUTION_RATE** is the rate of 64-beams point cloud, **MID_RESOLUTION_RATE** is the rate of 32-beams point cloud.
 ```yaml
-RANDOM_DOWNSAMPLE: True
+LINE_DOWNSAMPLE: True
 HIGH_RESOLUTION_RATE: 0.5
 MID_RESOLUTION_RATE: 0.3
 ```
@@ -187,4 +187,24 @@ AUG_CONFIG_LIST:
     - NAME: random_down_sample
       GENERAL_RATE: 0.2
       DENSE_RATE: 0.5
+```
+
+### Evaluation in low-beams or train Oracle
+
+- In KITTI dataset, if you want to use the 32-beams or 16-beams point cloud for evaluation or training, 
+set the **USE_LOW_BEAMS** to 32 or 16.
+```yaml
+DATA_CONFIG:
+    USE_LOW_BEAMS: 32
+```
+
+### Use IoU-aware head
+
+- Using IoU-aware head in SECOND need to add the SECONDHead and set the **CIA_SSD** to True. The other part is the same as second_iou. The whole
+config setting for SECOND + IoU-head is in [second_iou_aware.yaml](./tools/cfgs/kitti_models/second_iou_aware.yaml).
+```yaml
+ROI_HEAD:
+    NAME: SECONDHead
+    CLASS_AGNOSTIC: True
+    CIA_SSD: True
 ```
