@@ -62,7 +62,7 @@ class KittiDataset(DatasetTemplate):
         self.sample_id_list = [x.strip() for x in open(split_dir).readlines()] if split_dir.exists() else None
 
     def get_lidar(self, idx):
-        if self.dataset_cfg.get('RANDOM_DOWNSAMPLE', False) and self.training:
+        if self.dataset_cfg.get('LINE_DOWNSAMPLE', False) and self.training:
             assert 0 <= self.dataset_cfg.HIGH_RESOLUTION_RATE <= 1 and 0 <= self.dataset_cfg.MID_RESOLUTION_RATE <= 1
             assert 0 <= self.dataset_cfg.HIGH_RESOLUTION_RATE + self.dataset_cfg.MID_RESOLUTION_RATE <= 1
             rate_64 = self.dataset_cfg.HIGH_RESOLUTION_RATE

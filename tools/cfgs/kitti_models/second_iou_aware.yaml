@@ -2,7 +2,7 @@ CLASS_NAMES: ['Car', 'Pedestrian', 'Cyclist']
 
 DATA_CONFIG: 
     _BASE_CONFIG_: cfgs/dataset_configs/kitti_dataset_iouaware.yaml
-    RANDOM_DOWNSAMPLE: False  # random downsample the point cloud to 32 or 16 beams, only turn on when training on 64
+    LINE_DOWNSAMPLE: False  # random downsample the point cloud to 32 or 16 beams, only turn on when training on 64
     HIGH_RESOLUTION_RATE: 0.5  # the rate of the 64-beams point cloud during random downsample
     MID_RESOLUTION_RATE: 0.3  # the rate of the 32-beams point cloud during random downsample, 1 - (HIGH_RESOLUTION_RATE + MID_RESOLUTION_RATE) = 16-beams point cloud rate
     USE_LOW_BEAMS: False  # turn on when using low-beams point cloud: train Oracle or eval on target domain. Only 32 and 16 can be chosen
