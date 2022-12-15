@@ -51,6 +51,7 @@ MODEL:
         USE_RELATIVE_COORDS: True
         USE_POOLED_FEATURE: True
         USE_NO_QUERY_COORDS: True
+        USE_VOXEL_RCNN_HEAD: True
         NUM_OUTPUT_FEATURES: 64
         HASH_SIZE: 400000 # 5x max_voxels
         PARAMS:

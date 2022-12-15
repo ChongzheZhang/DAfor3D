@@ -873,12 +873,14 @@ class VoxelTransformerV3(nn.Module):
             self.backbone.append(AttentionResBlock(param, self.use_relative_coords, self.use_pooled_feature, self.use_no_query_coords))
 
         self.num_point_features = self.model_cfg.NUM_OUTPUT_FEATURES
-        self.backbone_channels = {
-            'x_conv1': 16,
-            'x_conv2': 32,
-            'x_conv3': 64,
-            'x_conv4': 64
-        }
+        self.use_voxel_rcnn_head = self.model_cfg.get('USE_VOXEL_RCNN_HEAD', False)
+        if self.use_voxel_rcnn_head:
+            self.backbone_channels = {
+                'x_conv1': 16,
+                'x_conv2': 32,
+                'x_conv3': 64,
+                'x_conv4': 64
+            }
 
     def forward(self, batch_dict):
         voxel_features_, voxel_coords = batch_dict['voxel_features'], batch_dict['voxel_coords']
@@ -886,12 +888,18 @@ class VoxelTransformerV3(nn.Module):
 
         voxel_features = self.input_transform(voxel_features_)
 
-        x_convs = [SparseConvTensor(
-            features=voxel_features,
-            indices=voxel_coords.int(),
-            batch_size=batch_size,
-            spatial_shape=self.grid_size,
-        )]
+        if self.use_voxel_rcnn_head:
+            x_convs = [SparseConvTensor(
+                features=voxel_features,
+                indices=voxel_coords.int(),
+                batch_size=batch_size,
+                spatial_shape=self.grid_size,
+            )]
+        else:
+            x_convs = [SparseConvTensor(
+                features=voxel_features,
+                indices=voxel_coords.int(),
+            )]
 
         sp_tensor = SparseTensor(
             features = voxel_features,
@@ -906,12 +914,18 @@ class VoxelTransformerV3(nn.Module):
         )
         for attention_block in self.backbone:
             sp_tensor = attention_block(sp_tensor)
-            x_convs.append(SparseConvTensor(
-                features=sp_tensor.features,
-                indices=sp_tensor.indices,
-                batch_size = sp_tensor.batch_size,
-                spatial_shape = sp_tensor.spatial_shape,
-            ))
+            if self.use_voxel_rcnn_head:
+                x_convs.append(SparseConvTensor(
+                    features=sp_tensor.features,
+                    indices=sp_tensor.indices,
+                    batch_size=sp_tensor.batch_size,
+                    spatial_shape=sp_tensor.spatial_shape,
+                ))
+            else:
+                x_convs.append(SparseConvTensor(
+                    features=sp_tensor.features,
+                    indices=sp_tensor.indices,
+                ))
 
         batch_dict.update({
             'multi_scale_3d_features': {
