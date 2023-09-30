@@ -31,9 +31,9 @@ pyenv activate open
 #--num_epochs_to_eval 15
 
 # test votr
-python test.py --cfg_file cfgs/kitti_models/votr_tsd_0.yaml \
---ckpt /no_backups/s1420/open_output/kitti_models/votr_tsd_0/only_Downsample/ckpt/checkpoint_epoch_76.pth \
---extra_tag only_Downsample_eval_on_32
+#python test.py --cfg_file cfgs/kitti_models/votr_tsd_0.yaml \
+#--ckpt /no_backups/s1420/open_output/kitti_models/votr_tsd_0/only_Downsample/ckpt/checkpoint_epoch_76.pth \
+#--extra_tag only_Downsample_eval_on_32
 
 
 
@@ -81,11 +81,11 @@ python test.py --cfg_file cfgs/kitti_models/votr_tsd_0.yaml \
 
 
 #train voxel rcnn
-#CUDA_VISIBLE_DEVICES=0 python train.py \
-#--cfg_file cfgs/kitti_models/voxel_rcnn_3class_.yaml \
-#--extra_tag only_Downsample \
-#--max_ckpt_save_num 15 \
-#--num_epochs_to_eval 15
+CUDA_VISIBLE_DEVICES=0 python train.py \
+--cfg_file cfgs/kitti_models/voxel_rcnn_3class_.yaml \
+--extra_tag only_Downsample \
+--max_ckpt_save_num 15 \
+--num_epochs_to_eval 15
 
 #test voxel rcnn
 #python test.py --cfg_file cfgs/kitti_models/voxel_rcnn_3class_.yaml \
